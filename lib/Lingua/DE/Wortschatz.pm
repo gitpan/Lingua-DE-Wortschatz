@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm,v 1.6 2005/10/27 16:56:23 manonegra Exp $
+#$Id: Wortschatz.pm,v 1.7 2005/10/27 18:01:52 wolfgang Exp $
 
 package Lingua::DE::Wortschatz;
 
@@ -11,7 +11,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = sprintf("1.%d.%02d", q$Revision: 1.6 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -104,7 +104,7 @@ sub cmd {
 package Lingua::DE::Wortschatz::Result;
 use strict;
 
-our $VERSION = sprintf("1.%d.%02d", q$Revision: 1.6 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
 
 sub new {
     my ($proto,$service,@names) = @_;
@@ -287,7 +287,7 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm,v 1.6 2005/10/27 16:56:23 manonegra Exp $>.
+This is C<$Id: Wortschatz.pm,v 1.7 2005/10/27 18:01:52 wolfgang Exp $>.
 
 Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
 
