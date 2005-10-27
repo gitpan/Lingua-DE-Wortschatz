@@ -1,20 +1,21 @@
 ---
 name: Lingua-DE-Wortschatz
-version: 1.1.04
+version: 1.1.06
 author:
   - Daniel Schroeer <daniel@daimla1.de>
 abstract: wortschatz.uni-leipzig.de webservice client
 license: perl
 requires:
   Encode: 0
+  Exporter: 0
   HTML::Entities: 0
   SOAP::Lite: 0
   Text::Autoformat: 0
 provides:
   Lingua::DE::Wortschatz:
     file: lib/Lingua/DE/Wortschatz.pm
-    version: 1.1.04
+    version: 1.1.06
   Lingua::DE::Wortschatz::Result:
     file: lib/Lingua/DE/Wortschatz.pm
-    version: 1.1.04
+    version: 1.1.06
 generated_by: Module::Build version 0.2611

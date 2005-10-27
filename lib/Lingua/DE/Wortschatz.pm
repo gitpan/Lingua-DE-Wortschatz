@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm,v 1.4 2005/10/26 23:44:00 wolfgang Exp $
+#$Id: Wortschatz.pm,v 1.6 2005/10/27 16:56:23 manonegra Exp $
 
 package Lingua::DE::Wortschatz;
 
@@ -6,8 +6,12 @@ use strict;
 use SOAP::Lite;# +trace=>'all';
 use HTML::Entities;
 use Text::Autoformat;
+use Exporter 'import';
 
-our $VERSION = sprintf("1.%d.%02d", q$Revision: 1.4 $ =~ /(\d+)\.(\d+)/);
+our @EXPORT_OK = qw(use_service help);
+our %EXPORT_TAGS = (all => [@EXPORT_OK]);
+ 
+our $VERSION = sprintf("1.%d.%02d", q$Revision: 1.6 $ =~ /(\d+)\.(\d+)/);
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -35,7 +39,7 @@ my %services=( # service_name => [ 'corpus', [ 'inparam<=default>', .. ], [ 'out
 sub use_service {
     #returns a Lingua::DE::Wortschatz::Result object
 
-    #get input parameters and set defaults or return () if necessary
+    #get input parameters and set defaults or return undef if necessary
     my $service=cmd(shift);
     my %params;
     for (@{$services{$service}->[1]}) {
@@ -100,6 +104,8 @@ sub cmd {
 package Lingua::DE::Wortschatz::Result;
 use strict;
 
+our $VERSION = sprintf("1.%d.%02d", q$Revision: 1.6 $ =~ /(\d+)\.(\d+)/);
+
 sub new {
     my ($proto,$service,@names) = @_;
     my $class = ref($proto) || $proto;
@@ -111,6 +117,28 @@ sub add {
     push(@{$self->{data}},\@values);
 }
 
+sub dump {
+    my $self=shift;
+    print "Service ",$self->service,"\n\n";
+    my @lengths;
+    for my $row ($self->data,$self->{names}) {
+        for (0..$#$row) {
+            my $l=length($row->[$_]);
+            $lengths[$_]=$l unless ($lengths[$_] && ($lengths[$_] > $l));
+        }
+    }
+    my $form=(join "",map {'%-'.($_+1).'s'} @lengths)."\n";
+    printf $form,@{$self->{names}};
+    print join " ",map {"-"x$_} @lengths;print "\n";
+    printf $form,@$_ for (@{$self->{data}});
+}
+
+sub service { shift->{service} }
+    
+sub names { @{shift->{names}} }
+    
+sub data { @{shift->{data}} }
+    
 sub hashrefs {
     my $self=shift;
     my @res=();
@@ -122,13 +150,6 @@ sub hashrefs {
     return @res;
 }
 
-sub dump {
-    my $self=shift;
-    print "Service ",$self->{service},"\n\n";
-    print join "\t",@{$self->{names}},"\n";
-    print((join "\t",@$_),"\n") for (@{$self->{data}});
-}
-    
 1;
 
 __END__
@@ -171,8 +192,8 @@ service are supplied. Otherwise it returns a result object (see below).
 
 All public services at L<http://wortschatz.uni-leipzig.de> are
 available. Below is a list of service names and their parameters.
-Any parameters with = are optional and default to the given value.
-Service names can be abbreviated to the shortest possible form.
+Any parameter with = is optional and defaults to the given value.
+Service names can be abbreviated to the shortest unique form.
 
   * ServiceOverview Name=
   * Cooccurrences Wort Mindestsignifikanz=1 Limit=10
@@ -197,12 +218,12 @@ can be obtained with the help function.
 Returns a string containing information about the service
 with name C<$service>. If no service name is given,
 a short list of all available services is returned. If
-C<$service eq 'full'> all more detailed list is created.
+C<$service eq 'full'> a more detailed list is created.
 
 =head1 THE RESULT OBJECT
 
-The use_service function returns result object of class
-C<Lingua::Webservice::Result> that holds the results.
+The C<use_service> function returns a result object of class
+C<Lingua::DE::Wortschatz::Result> that holds the results.
 
 This object offers methods to conveniently access the data.
 
@@ -211,6 +232,24 @@ This object offers methods to conveniently access the data.
  $result->dump();
 
 Pretty prints the data to STDOUT.
+
+=head2 service()
+
+ $service_name=$result->service();
+
+Returns the name of the service that was used to obtain the data.
+
+=head2 names()
+
+ @column_headers=$result->names();
+
+Returns a list of the names of the data columns.
+
+=head2 data()
+
+ @rows=$result->data();
+
+Returns a list of datasets. Each dataset is a reference to a list of values.
 
 =head2 hashrefs()
 
@@ -226,8 +265,8 @@ I wrote this to understand SOAP better. It took me way too long, due to
 the lack of documentation.
 
 I couldn't figure out how to make SOAP::Lite and SOAP::Data create the
-request parameters in the correct way. It appears to me that this would require me to create custom as_Datatype
-functions for all the used types.
+request parameters in the correct way. It appears to me that this would
+require me to create custom as_Datatype functions for all the used types.
 
 I could neither make it work using the WSDL file. I think with the data
 format that wortschatz.u-l requires, WSDL is pretty useless.
@@ -248,9 +287,9 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm,v 1.4 2005/10/26 23:44:00 wolfgang Exp $>.
+This is C<$Id: Wortschatz.pm,v 1.6 2005/10/27 16:56:23 manonegra Exp $>.
 
-Copyright 2005 Daniel Schröer (L<mailto: daniel@daimla1.de>).
+Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
 
 This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.

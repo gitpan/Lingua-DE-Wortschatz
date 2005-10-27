@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: Build.PL,v 1.2 2005/10/26 23:43:59 wolfgang Exp $
+#$Id: Build.PL,v 1.4 2005/10/27 16:21:46 manonegra Exp $
 
 use strict;
 use Module::Build;
@@ -12,6 +12,7 @@ my $build=Module::Build->new(
         'HTML::Entities'    => 0,
         'Text::Autoformat'  => 0,
         'Encode'            => 0,
+        'Exporter'          => 0,
     },
     script_files    => ['wsws.pl'],
     create_readme   => 0,

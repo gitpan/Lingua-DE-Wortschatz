@@ -2,11 +2,11 @@
 
 use strict;
 use Encode;
-use Lingua::DE::Wortschatz;
+use Lingua::DE::Wortschatz ':all';
 
 my @args=map {encode("utf8",$_)} @ARGV;
 if (defined($args[0]) && ($args[0] !~ /^help/)) {
-    if (my $result=Lingua::DE::Wortschatz::use_service(@args)) {
+    if (my $result=use_service(@args)) {
         $result->dump();
         exit;
     }
@@ -19,7 +19,7 @@ Type "$0 help full" for a complete description of all services.
 
 Available services:
 HELP
-print Lingua::DE::Wortschatz::help(@args);
+print help(@args);
 
 __END__
 
@@ -47,8 +47,8 @@ The general syntax is
 
 All public services at L<http://wortschatz.uni-leipzig.de> are
 available. Below is a list of service names and their parameters.
-Any parameters with = are optional and default to the given value.
-Service names can be abbreviated to the shortest possible form.
+Any parameter with = is optional and defaults to the given value.
+Service names can be abbreviated to the shortest unique form.
 
   * ServiceOverview Name=
   * Cooccurrences Wort Mindestsignifikanz=1 Limit=10
@@ -89,9 +89,9 @@ additional information on what each service does.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: wsws.pl,v 1.14 2005/10/26 23:44:00 wolfgang Exp $>.
+This is C<$Id: wsws.pl,v 1.16 2005/10/27 16:21:46 manonegra Exp $>.
 
-Copyright 2005 Daniel Schröer (L<mailto: daniel@daimla1.de>).
+Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
 
 This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
