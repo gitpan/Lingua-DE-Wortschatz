@@ -1,8 +1,8 @@
 --- #YAML:1.0
 name: Lingua-DE-Wortschatz
-version: 1.21007
+version: 1.21008
 author:
   - Daniel Schroeer <daniel@daimla1.de>
 abstract: wortschatz.uni-leipzig.de webservice client
 license: perl
-generated_by: Module::Build version 0.2609, without YAML.pm
+generated_by: Module::Build version 0.2611, without YAML.pm

@@ -72,7 +72,7 @@ or
 
   wsws.pl help full
 
-for a online description of all available services, their parameters and
+for an online description of all available services, their parameters and
 additional information on what each service does.
 
 =head1 SEE ALSO
@@ -89,7 +89,7 @@ additional information on what each service does.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: wsws.pl,v 1.16 2005/10/27 16:21:46 manonegra Exp $>.
+This is C<$Id: wsws.pl,v 1.17 2005/11/03 00:01:45 wolfgang Exp $>.
 
 Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
 

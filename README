@@ -1,0 +1,53 @@
+=head1 Lingua::DE::Wortschatz
+
+This is a full featured client for the webservices at
+<http://wortschatz.uni-leipzig.de>. The script "wsws.pl" is a command
+line client that uses this lib. It is contained in this distribution.
+
+The webservices at <http://wortschatz.uni-leipzig.de> provide access to
+a database of the german word pool. Available services include tools to
+reduce words to base form, find synonyms, significant neighbours,
+example sentences and more. All public services at
+<http://wortschatz.uni-leipzig.de> are available.
+
+=head1 INSTALLATION
+
+The easiest is to install this module directly from CPAN using the standard
+mechanism for your platform, e.g. ppm on Windows/ActiveState or the CPAN shell
+on Linux.
+
+If you want to build the module manually (which is trivial), download and unpack
+the distribution, change to the created directory and type
+
+ perl Build.PL
+ perl Build
+ perl Build install
+
+This will install the Lingua::DE::Wortschatz.pm module and the command line
+script wsws.pl.
+
+Use
+
+ perldoc wsws.pl
+ perldoc Lingua::DE::Wortschatz
+
+to get further information on usage.
+
+=head1 CHANGES
+
+=head2 Lingua-DE-Wortschatz-1.21008
+
+ * Added README
+ * Updates to documentation
+ * Beautification of dump
+
+=head2 Lingua-DE-Wortschatz-1.21007
+
+ * Initial release.
+
+=head1 AUTHOR/COPYRIGHT
+
+Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
+
+This program is free software;
+you can redistribute it and/or modify it under the same terms as Perl itself.

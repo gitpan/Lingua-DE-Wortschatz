@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm,v 1.7 2005/10/27 18:01:52 wolfgang Exp $
+#$Id: Wortschatz.pm,v 1.8 2005/10/27 21:39:46 wolfgang Exp $
 
 package Lingua::DE::Wortschatz;
 
@@ -11,7 +11,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.8 $ =~ /(\d+)\.(\d+)/);
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -104,7 +104,7 @@ sub cmd {
 package Lingua::DE::Wortschatz::Result;
 use strict;
 
-our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.8 $ =~ /(\d+)\.(\d+)/);
 
 sub new {
     my ($proto,$service,@names) = @_;
@@ -127,10 +127,10 @@ sub dump {
             $lengths[$_]=$l unless ($lengths[$_] && ($lengths[$_] > $l));
         }
     }
-    my $form=(join "",map {'%-'.($_+1).'s'} @lengths)."\n";
-    printf $form,@{$self->{names}};
-    print join " ",map {"-"x$_} @lengths;print "\n";
-    printf $form,@$_ for (@{$self->{data}});
+    my $form=(join " ",map {'%-'.$_.'s'} @lengths)."\n";
+    printf $form,$self->names;
+    printf $form, map {"-"x$_} @lengths;
+    printf $form,@$_ for ($self->data);
 }
 
 sub service { shift->{service} }
@@ -177,8 +177,15 @@ Lingua::DE::Wortschatz - wortschatz.uni-leipzig.de webservice client
 
 This is a full featured client for the webservices
 at L<http://wortschatz.uni-leipzig.de>.
-The script C<wsws.pl> is a full featured command line
-client that uses this lib. It is contained in this distribution.
+The script C<wsws.pl> is a command line client that
+uses this lib. It is contained in this distribution.
+
+The webservices at L<http://wortschatz.uni-leipzig.de> provide
+access to a database of the german word pool. Available
+services include tools to reduce words to base form, find synonyms,
+significant neighbours, example sentences and more. All public
+services at L<http://wortschatz.uni-leipzig.de> are available.
+See below for a detailed list.
 
 =head1 FUNCTIONS
 
@@ -187,7 +194,7 @@ The following functions can be exported or used via the full name.
 =head2 use_service($name,@args)
 
 Uses the webservice named C<$name> with the arguments C<@args>.
-Returns undef if not enough arguments for the desired
+Returns C<undef> if not enough arguments for the desired
 service are supplied. Otherwise it returns a result object (see below).
 
 All public services at L<http://wortschatz.uni-leipzig.de> are
@@ -218,7 +225,7 @@ can be obtained with the help function.
 Returns a string containing information about the service
 with name C<$service>. If no service name is given,
 a short list of all available services is returned. If
-C<$service eq 'full'> a more detailed list is created.
+C<$service eq 'full'>, a more detailed list is created.
 
 =head1 THE RESULT OBJECT
 
@@ -287,7 +294,7 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm,v 1.7 2005/10/27 18:01:52 wolfgang Exp $>.
+This is C<$Id: Wortschatz.pm,v 1.8 2005/10/27 21:39:46 wolfgang Exp $>.
 
 Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
 
