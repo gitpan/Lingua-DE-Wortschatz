@@ -1,6 +1,6 @@
 Build.PL
 lib/Lingua/DE/Wortschatz.pm
 MANIFEST			This list of files
-META.yml
-README
 wsws.pl
+META.yml
+Makefile.PL

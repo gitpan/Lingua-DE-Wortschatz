@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: Build.PL,v 1.4 2005/10/27 16:21:46 manonegra Exp $
+#$Id: Build.PL,v 1.5 2005/11/03 23:28:53 wolfgang Exp $
 
 use strict;
 use Module::Build;
@@ -14,7 +14,8 @@ my $build=Module::Build->new(
         'Encode'            => 0,
         'Exporter'          => 0,
     },
-    script_files    => ['wsws.pl'],
-    create_readme   => 0,
-    dist_author     => 'Daniel Schroeer <daniel@daimla1.de>');
+    script_files    	=> ['wsws.pl'],
+    create_readme   	=> 0,
+    create_makefile_pl	=> 'passthrough',
+    dist_author     	=> 'Daniel Schroeer <daniel@daimla1.de>');
 $build->create_build_script;

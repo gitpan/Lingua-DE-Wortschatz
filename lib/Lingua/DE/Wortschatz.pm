@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm,v 1.8 2005/10/27 21:39:46 wolfgang Exp $
+#$Id: Wortschatz.pm,v 1.9 2005/11/21 13:58:07 manonegra Exp $
 
 package Lingua::DE::Wortschatz;
 
@@ -11,13 +11,13 @@ use Exporter 'import';
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.8 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
 my $MINSIG   = 1;
 
-#description of available services and their corpus, in and out parameters
+#description of available services and necessary corpus, in and out parameters
 my %services=( # service_name => [ 'corpus', [ 'inparam<=default>', .. ], [ 'outparam', .. ] )
     ServiceOverview => [ 'webservice', ['Name='], ['Name','Id','Status','Description','AuthorizationLevel','InputFields'] ],
     Cooccurrences   => [ 'de', ['Wort',"Mindestsignifikanz=$MINSIG","Limit=$LIMIT"], ['Wort','Kookkurrenz','Signifikanz'] ],
@@ -104,7 +104,7 @@ sub cmd {
 package Lingua::DE::Wortschatz::Result;
 use strict;
 
-our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.8 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
 
 sub new {
     my ($proto,$service,@names) = @_;
@@ -294,7 +294,7 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm,v 1.8 2005/10/27 21:39:46 wolfgang Exp $>.
+This is C<$Id: Wortschatz.pm,v 1.9 2005/11/21 13:58:07 manonegra Exp $>.
 
 Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
 
