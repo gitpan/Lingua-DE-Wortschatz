@@ -5,7 +5,8 @@ use strict;
 use Module::Build;
 
 my $build=Module::Build->new(
-    module_name => 'Lingua::DE::Wortschatz', 
+    module_name => 'Lingua::DE::Wortschatz',
+    dist_version=> '1.22',
     license     => 'perl',
     requires    => {
         'SOAP::Lite'        => 0,

@@ -1,9 +1,9 @@
 ---
 name: Lingua-DE-Wortschatz
-version: 1.21009
+version: 1.22
 author:
   - Daniel Schroeer <daniel@daimla1.de>
-abstract: wortschatz.uni-leipzig.de webservice client
+abstract: ~
 license: perl
 requires:
   Encode: 0
