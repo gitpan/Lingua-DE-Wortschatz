@@ -1,8 +1,8 @@
 ---
 name: Lingua-DE-Wortschatz
-version: 1.22
+version: 1.23
 author:
-  - Daniel Schroeer <daniel@daimla1.de>
+  - Daniel Schroeer <daniel.schroeer@physik.uni-muenchen.de>
 abstract: ~
 license: perl
 requires:
