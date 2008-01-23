@@ -12,7 +12,7 @@ if (defined($args[0]) && ($args[0] !~ /^help/)) {
     }
 } else { shift @args }
 print <<HELP;
-wsws - Wortschatz-Webservice-Client (c) 2005 Daniel Schröer
+wsws - Wortschatz-Webservice-Client (c) 2005-2008 Daniel Schröer
 
 Usage: $0 service arguments
 Type "$0 help full" for a complete description of all services.
@@ -63,6 +63,8 @@ Service names can be abbreviated to the shortest unique form.
   * Similarity Wort Limit=10
   * LeftCollocationFinder Wort Wortart Limit=10
   * RightCollocationFinder Wort Wortart Limit=10
+  * Sachgebiet Wort  
+  * Kreuzwortraetsel Wort Wortlaenge Limit=10
 
 Type
 
@@ -89,9 +91,9 @@ additional information on what each service does.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: wsws.pl,v 1.17 2005/11/03 00:01:45 wolfgang Exp $>.
+This is C<$Id: wsws.pl 1035 2008-01-21 22:55:06Z schroeer $>.
 
-Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
+Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
 
 This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.

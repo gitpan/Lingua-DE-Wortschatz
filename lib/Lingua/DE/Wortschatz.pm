@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm,v 1.9 2005/11/21 13:58:07 manonegra Exp $
+#$Id: Wortschatz.pm 1037 2008-01-21 23:13:59Z schroeer $
 
 package Lingua::DE::Wortschatz;
 
@@ -11,7 +11,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = "1.24";
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -28,12 +28,15 @@ my %services=( # service_name => [ 'corpus', [ 'inparam<=default>', .. ], [ 'out
     Frequencies     => [ 'de', ['Wort',"Limit=$LIMIT"], ['Anzahl','Frequenzklasse'] ],
     Synonyms        => [ 'de', ['Wort',"Limit=$LIMIT"], ['Synonym'] ],
     Thesaurus       => [ 'de', ['Wort',"Limit=$LIMIT"], ['Synonym'] ],
-    Wordforms       => [ 'de', ['Word',"Limit=$LIMIT"], ['Form'] ], #find their nice trap
+    Wordforms       => [ 'de', ['Word',"Limit=$LIMIT"], ['Form'] ], #find the trap that wortschatz.u-l guys have hidden here
     Similarity      => [ 'de', ['Wort',"Limit=$LIMIT"], ['Wort','Verwandter','Signifikanz'] ],
     LeftCollocationFinder
                     => [ 'de', ['Wort','Wortart',"Limit=$LIMIT"], ['Kollokation','Wortart','Wort'] ],
     RightCollocationFinder
                     => [ 'de', ['Wort','Wortart',"Limit=$LIMIT"], ['Wort','Kollokation','Wortart'] ],
+    Sachgebiet      => [ 'de', ['Wort'], ['Sachgebiet'] ],
+    Kreuzwortraetsel
+                    => [ 'de', ['Wort','Wortlaenge',"Limit=$LIMIT"], ['Wort'] ],
 );
 
 sub use_service {
@@ -104,7 +107,7 @@ sub cmd {
 package Lingua::DE::Wortschatz::Result;
 use strict;
 
-our $VERSION = sprintf("1.2%d%03d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
+our $VERSION = "1.24";
 
 sub new {
     my ($proto,$service,@names) = @_;
@@ -184,8 +187,14 @@ The webservices at L<http://wortschatz.uni-leipzig.de> provide
 access to a database of the german word pool. Available
 services include tools to reduce words to base form, find synonyms,
 significant neighbours, example sentences and more. All public
-services at L<http://wortschatz.uni-leipzig.de> are available.
-See below for a detailed list.
+services at L<http://wortschatz.uni-leipzig.de> are available
+through this client. See the detailed list below.
+
+FAQs: I have nothing to do with Uni Leipzig and the Wortschatz
+project. I can only guess on questions related to the german
+language. This program will really run on Windows when you have Perl installed.
+It will indeed allow you to perform automized queries from inside
+your scripts. You can also use it from the command line. There is no GUI.
 
 =head1 FUNCTIONS
 
@@ -215,6 +224,8 @@ Service names can be abbreviated to the shortest unique form.
   * Similarity Wort Limit=10
   * LeftCollocationFinder Wort Wortart Limit=10
   * RightCollocationFinder Wort Wortart Limit=10
+  * Sachgebiet Wort  
+  * Kreuzwortraetsel Wort Wortlaenge Limit=10
 
 A full list of available services, their parameters
 and additional information on what each service does
@@ -294,9 +305,9 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm,v 1.9 2005/11/21 13:58:07 manonegra Exp $>.
+This is C<$Id: Wortschatz.pm 1037 2008-01-21 23:13:59Z schroeer $>.
 
-Copyright 2005 Daniel Schröer (L<daniel@daimla1.de>).
+Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
 
 This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.

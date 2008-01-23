@@ -1,12 +1,12 @@
 #!/usr/bin/perl
-#$Id: Build.PL,v 1.7 2005/12/07 22:03:16 wolfgang Exp $
+#$Id: Build.PL 1036 2008-01-21 23:02:57Z schroeer $
 
 use strict;
 use Module::Build;
 
 my $build=Module::Build->new(
     module_name => 'Lingua::DE::Wortschatz',
-    dist_version=> '1.23',
+    dist_version=> '1.24',
     license     => 'perl',
     requires    => {
         'SOAP::Lite'        => 0,
@@ -18,5 +18,5 @@ my $build=Module::Build->new(
     script_files    	=> ['wsws.pl'],
     create_readme   	=> 0,
     create_makefile_pl	=> 'passthrough',
-    dist_author     	=> 'Daniel Schroeer <daniel.schroeer@physik.uni-muenchen.de>');
+    dist_author     	=> 'Daniel Schroeer <schroeer@cpan.org>');
 $build->create_build_script;
