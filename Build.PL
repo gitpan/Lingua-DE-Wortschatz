@@ -1,12 +1,12 @@
 #!/usr/bin/perl
-#$Id: Build.PL 1036 2008-01-21 23:02:57Z schroeer $
+#$Id: Build.PL 1039 2008-01-25 20:23:48Z schroeer $
 
 use strict;
 use Module::Build;
 
 my $build=Module::Build->new(
     module_name => 'Lingua::DE::Wortschatz',
-    dist_version=> '1.24',
+    dist_version=> '1.25',
     license     => 'perl',
     requires    => {
         'SOAP::Lite'        => 0,

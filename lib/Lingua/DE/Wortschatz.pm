@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm 1037 2008-01-21 23:13:59Z schroeer $
+#$Id: Wortschatz.pm 1057 2008-02-28 17:54:09Z schroeer $
 
 package Lingua::DE::Wortschatz;
 
@@ -11,7 +11,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = "1.24";
+our $VERSION = "1.25";
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -25,7 +25,7 @@ my %services=( # service_name => [ 'corpus', [ 'inparam<=default>', .. ], [ 'out
     Sentences       => [ 'de', ['Wort',"Limit=$LIMIT"], ['Satz'] ],
     RightNeighbours => [ 'de', ['Wort',"Limit=$LIMIT"], ['Wort','Nachbar','Signifikanz'] ],
     LeftNeighbours  => [ 'de', ['Wort',"Limit=$LIMIT"], ['Nachbar','Wort','Signifikanz'] ],
-    Frequencies     => [ 'de', ['Wort',"Limit=$LIMIT"], ['Anzahl','Frequenzklasse'] ],
+    Frequencies     => [ 'de', ['Wort'], ['Anzahl','Frequenzklasse'] ],
     Synonyms        => [ 'de', ['Wort',"Limit=$LIMIT"], ['Synonym'] ],
     Thesaurus       => [ 'de', ['Wort',"Limit=$LIMIT"], ['Synonym'] ],
     Wordforms       => [ 'de', ['Word',"Limit=$LIMIT"], ['Form'] ], #find the trap that wortschatz.u-l guys have hidden here
@@ -164,8 +164,11 @@ Lingua::DE::Wortschatz - wortschatz.uni-leipzig.de webservice client
 =head1 SYNOPSIS
 
     use Lingua::DE::Wortschatz;
+    # use Lingua::DE::Wortschatz ':all'; # import all functions
     
     my $result=Lingua::DE::Wortschatz::use_service('T','toll');
+    # my $result=use_service('T','toll'); # with imported functions
+    
     $result->dump;
     
     @lines=$result->hashrefs();
@@ -175,6 +178,8 @@ Lingua::DE::Wortschatz - wortschatz.uni-leipzig.de webservice client
 
     print Lingua::DE::Wortschatz::help('T');
     print Lingua::DE::Wortschatz::help('full');
+    
+    $result->dump;
 
 =head1 DESCRIPTION
 
@@ -190,11 +195,12 @@ significant neighbours, example sentences and more. All public
 services at L<http://wortschatz.uni-leipzig.de> are available
 through this client. See the detailed list below.
 
-FAQs: I have nothing to do with Uni Leipzig and the Wortschatz
-project. I can only guess on questions related to the german
-language. This program will really run on Windows when you have Perl installed.
-It will indeed allow you to perform automized queries from inside
-your scripts. You can also use it from the command line. There is no GUI.
+I have nothing to do with the University of Leipzig and the Wortschatz
+project. Personally, I'm just an average german native speaker and can only guess
+on questions related to the german language. Further answers to frequent questions
+are that this program will really run on Windows, provided that Perl is installed.
+The program will indeed allow to perform automated queries with perl scripts.
+It can be used from the command line, too. There is no GUI.
 
 =head1 FUNCTIONS
 
@@ -230,6 +236,8 @@ Service names can be abbreviated to the shortest unique form.
 A full list of available services, their parameters
 and additional information on what each service does
 can be obtained with the help function.
+
+For the Kreuzwortraetsel service, use % as a placeholder in parameter Wort.
 
 =head2 help(?$service)
 
@@ -305,7 +313,7 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm 1037 2008-01-21 23:13:59Z schroeer $>.
+This is C<$Id: Wortschatz.pm 1057 2008-02-28 17:54:09Z schroeer $>.
 
 Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
 

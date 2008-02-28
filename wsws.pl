@@ -12,7 +12,7 @@ if (defined($args[0]) && ($args[0] !~ /^help/)) {
     }
 } else { shift @args }
 print <<HELP;
-wsws - Wortschatz-Webservice-Client (c) 2005-2008 Daniel Schröer
+wsws.pl - Wortschatz-Webservice-Client (c) 2005-2008 Daniel Schröer
 
 Usage: $0 service arguments
 Type "$0 help full" for a complete description of all services.
@@ -91,7 +91,7 @@ additional information on what each service does.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: wsws.pl 1035 2008-01-21 22:55:06Z schroeer $>.
+This is C<$Id: wsws.pl 1057 2008-02-28 17:54:09Z schroeer $>.
 
 Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
 
