@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm 1057 2008-02-28 17:54:09Z schroeer $
+#$Id: Wortschatz.pm 1144 2008-10-04 20:52:59Z schroeer $
 
 package Lingua::DE::Wortschatz;
 
@@ -7,11 +7,13 @@ use SOAP::Lite;# +trace=>'all';
 use HTML::Entities;
 use Text::Autoformat;
 use Exporter 'import';
+use Data::Dumper;
+$Data::Dumper::Indent=1;
 
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = "1.25";
+our $VERSION = "1.26";
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -43,7 +45,7 @@ sub use_service {
     #returns a Lingua::DE::Wortschatz::Result object
 
     #get input parameters and set defaults or return undef if necessary
-    my $service=cmd(shift);
+    my $service=parse_servicename(shift);
     my %params;
     for (@{$services{$service}->[1]}) {
         if (/([^=]+)=(.*)/) { $params{$1}=shift || $2}
@@ -56,16 +58,43 @@ sub use_service {
     # perform the actual soap query and bring results into shape
     # wortschatz has two different kind of return types; kind of scalar and list
     my $soap = SOAP::Lite->proxy($BASE_URL.$service); 
-    my @res=$soap->execute(make_params($corpus,\%params))
-                 ->valueof('//result/'.((@resultnames > 1) ? '*' : 'dataVectors').'/*');
-    my $result=Lingua::DE::Wortschatz::Result->new($service,@resultnames);
-    $result->add(splice @res,0,@resultnames) while (@res);
-    return $result;
+    my $result=$soap->execute(make_params($corpus,\%params));
+    #print Dumper($result);
+    #print $soap->execute(make_params($corpus,\%params))->{_context}->{_transport}->{_proxy}->{_http_response}->{_content};
+    if ($result->fault) {
+        die "SOAP has returned an error (".
+            $result->faultcode."):\n". 
+            $result->faultstring;
+    }
+        
+    my @res=$result->valueof('//result/'.((@resultnames > 1) ? '*' : 'dataVectors').'/*');
+    my $resobj=Lingua::DE::Wortschatz::Result->new($service,@resultnames);
+    $resobj->add(splice @res,0,@resultnames) while (@res);
+    return $resobj;
+}
+
+sub use_service_xml {
+    #returns the raw xml
+
+    #get input parameters and set defaults or return undef if necessary
+    my $service=parse_servicename(shift);
+    my %params;
+    for (@{$services{$service}->[1]}) {
+        if (/([^=]+)=(.*)/) { $params{$1}=shift || $2}
+        else                { $params{$_}=shift || undef($service) }
+    }
+    return undef unless ($service);
+    my $corpus=$services{$service}->[0];
+    my @resultnames=@{$services{$service}->[2]};
+
+    # perform the actual soap query and bring results into shape
+    my $soap = SOAP::Lite->proxy($BASE_URL.$service); 
+    return $soap->execute(make_params($corpus,\%params))->{_context}->{_transport}->{_proxy}->{_http_response}->{_content};
 }
 
 sub help {
     my $cmd=shift || 'list';
-    $cmd = cmd($cmd);
+    $cmd = parse_servicename($cmd);
     my @so=use_service('ServiceOverview')->hashrefs();
     my $help="";
     for my $so (@so) {
@@ -99,7 +128,7 @@ sub make_params {
     SOAP::Data->type(xml=>$xml);
 }
 
-sub cmd {
+sub parse_servicename {
     my ($service)=grep(/^$_[0]/,keys %services);
     return $service || $_[0];
 }
@@ -107,7 +136,7 @@ sub cmd {
 package Lingua::DE::Wortschatz::Result;
 use strict;
 
-our $VERSION = "1.24";
+our $VERSION = $Lingua::DE::Wortschatz::VERSION;
 
 sub new {
     my ($proto,$service,@names) = @_;
@@ -195,12 +224,13 @@ significant neighbours, example sentences and more. All public
 services at L<http://wortschatz.uni-leipzig.de> are available
 through this client. See the detailed list below.
 
-I have nothing to do with the University of Leipzig and the Wortschatz
-project. Personally, I'm just an average german native speaker and can only guess
-on questions related to the german language. Further answers to frequent questions
-are that this program will really run on Windows, provided that Perl is installed.
-The program will indeed allow to perform automated queries with perl scripts.
+The author of this module has nothing to do with the University of Leipzig or the Wortschatz
+project.
+
+This module allows to perform automated queries with perl scripts.
 It can be used from the command line, too. There is no GUI.
+
+This program will run on Windows if perl is installed.
 
 =head1 FUNCTIONS
 
@@ -208,9 +238,9 @@ The following functions can be exported or used via the full name.
 
 =head2 use_service($name,@args)
 
-Uses the webservice named C<$name> with the arguments C<@args>.
-Returns C<undef> if not enough arguments for the desired
-service are supplied. Otherwise it returns a result object (see below).
+Uses the webservice named C<$name> with arguments C<@args>.
+Returns a result object that is described L<THE RESULT OBJECT|below>. Returns C<undef> if an insufficient number of arguments for the desired
+service is supplied.
 
 All public services at L<http://wortschatz.uni-leipzig.de> are
 available. Below is a list of service names and their parameters.
@@ -238,6 +268,11 @@ and additional information on what each service does
 can be obtained with the help function.
 
 For the Kreuzwortraetsel service, use % as a placeholder in parameter Wort.
+
+=head2 use_service_xml($name,@args)
+
+Does the same as C<use_service()> but returns the raw XML data that was
+sent by C<wortschatz.uni-leipzig.de>.
 
 =head2 help(?$service)
 
@@ -299,7 +334,7 @@ format that wortschatz.u-l requires, WSDL is pretty useless.
 
 So I decided to use a straightforward approach and create the XML request
 parameters myself. This is probably not the idea of that whole SOAP thing,
-but it's short and it works. But see it as a hack.
+but it is short and it works. It's a hack.
 
 =head1 SEE ALSO
 
@@ -313,7 +348,7 @@ but it's short and it works. But see it as a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm 1057 2008-02-28 17:54:09Z schroeer $>.
+This is C<$Id: Wortschatz.pm 1144 2008-10-04 20:52:59Z schroeer $>.
 
 Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
 

@@ -1,14 +1,14 @@
 #!/usr/bin/perl
-#$Id: Build.PL 1039 2008-01-25 20:23:48Z schroeer $
+#$Id: Build.PL 1059 2008-03-03 21:39:24Z schroeer $
 
 use strict;
 use Module::Build;
 
 my $build=Module::Build->new(
-    module_name => 'Lingua::DE::Wortschatz',
-    dist_version=> '1.25',
-    license     => 'perl',
-    requires    => {
+    module_name         => 'Lingua::DE::Wortschatz',
+    version_from        => 'lib/Lingua/DE/Wortschatz.pm',
+    license             => 'perl',
+    requires            => {
         'SOAP::Lite'        => 0,
         'HTML::Entities'    => 0,
         'Text::Autoformat'  => 0,
