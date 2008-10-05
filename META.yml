@@ -1,6 +1,6 @@
 ---
 name: Lingua-DE-Wortschatz
-version: 1.26
+version: 1.27
 author:
   - 'Daniel Schroeer <schroeer@cpan.org>'
 abstract: wortschatz.uni-leipzig.de webservice client
@@ -18,7 +18,7 @@ meta-spec:
 provides:
   Lingua::DE::Wortschatz:
     file: lib/Lingua/DE/Wortschatz.pm
-    version: 1.26
+    version: 1.27
   Lingua::DE::Wortschatz::Result:
     file: lib/Lingua/DE/Wortschatz.pm
     version: 0

@@ -10,14 +10,17 @@ if (defined($args[0]) && ($args[0] !~ /^help/)) {
         $result->dump();
         exit;
     }
-} else { shift @args }
+}
+if ($args[0] =~ /^help/) {
+    shift @args;
+}
+
 print <<HELP;
 wsws.pl - Wortschatz-Webservice-Client (c) 2005-2008 Daniel Schröer
 
 Usage: $0 service arguments
 Type "$0 help full" for a complete description of all services.
 
-Available services:
 HELP
 print help(@args);
 
@@ -91,9 +94,9 @@ additional information on what each service does.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: wsws.pl 1057 2008-02-28 17:54:09Z schroeer $>.
+This is C<$Id: wsws.pl 1151 2008-10-05 20:57:26Z schroeer $>.
 
-Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
+Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>). Any feedback is appreciated.
 
 This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,4 +1,4 @@
-#$Id: Wortschatz.pm 1144 2008-10-04 20:52:59Z schroeer $
+#$Id: Wortschatz.pm 1151 2008-10-05 20:57:26Z schroeer $
 
 package Lingua::DE::Wortschatz;
 
@@ -13,7 +13,7 @@ $Data::Dumper::Indent=1;
 our @EXPORT_OK = qw(use_service help);
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
  
-our $VERSION = "1.26";
+our $VERSION = "1.27";
 
 my $BASE_URL = 'http://anonymous:anonymous@pcai055.informatik.uni-leipzig.de:8100/axis/services/';
 my $LIMIT    = 10;
@@ -44,59 +44,36 @@ my %services=( # service_name => [ 'corpus', [ 'inparam<=default>', .. ], [ 'out
 sub use_service {
     #returns a Lingua::DE::Wortschatz::Result object
 
-    #get input parameters and set defaults or return undef if necessary
-    my $service=parse_servicename(shift);
+    #get input parameters and set defaults or return undef if service unknown or insufficent parameters
+    my $service=parse_servicename(shift) || return undef;
     my %params;
     for (@{$services{$service}->[1]}) {
         if (/([^=]+)=(.*)/) { $params{$1}=shift || $2}
-        else                { $params{$_}=shift || undef($service) }
+        else                { $params{$_}=shift || return undef }
     }
-    return undef unless ($service);
     my $corpus=$services{$service}->[0];
     my @resultnames=@{$services{$service}->[2]};
 
-    # perform the actual soap query and bring results into shape
-    # wortschatz has two different kind of return types; kind of scalar and list
+    # perform the soap query
     my $soap = SOAP::Lite->proxy($BASE_URL.$service); 
     my $result=$soap->execute(make_params($corpus,\%params));
     #print Dumper($result);
     #print $soap->execute(make_params($corpus,\%params))->{_context}->{_transport}->{_proxy}->{_http_response}->{_content};
-    if ($result->fault) {
-        die "SOAP has returned an error (".
-            $result->faultcode."):\n". 
-            $result->faultstring;
-    }
+    die "SOAP has returned an error (".$result->faultcode."):\n".$result->faultstring if ($result->fault);
         
+    # bring results into shape
+    # wortschatz has two different kind of return types; kind of scalar and list
     my @res=$result->valueof('//result/'.((@resultnames > 1) ? '*' : 'dataVectors').'/*');
     my $resobj=Lingua::DE::Wortschatz::Result->new($service,@resultnames);
     $resobj->add(splice @res,0,@resultnames) while (@res);
     return $resobj;
 }
 
-sub use_service_xml {
-    #returns the raw xml
-
-    #get input parameters and set defaults or return undef if necessary
-    my $service=parse_servicename(shift);
-    my %params;
-    for (@{$services{$service}->[1]}) {
-        if (/([^=]+)=(.*)/) { $params{$1}=shift || $2}
-        else                { $params{$_}=shift || undef($service) }
-    }
-    return undef unless ($service);
-    my $corpus=$services{$service}->[0];
-    my @resultnames=@{$services{$service}->[2]};
-
-    # perform the actual soap query and bring results into shape
-    my $soap = SOAP::Lite->proxy($BASE_URL.$service); 
-    return $soap->execute(make_params($corpus,\%params))->{_context}->{_transport}->{_proxy}->{_http_response}->{_content};
-}
-
 sub help {
     my $cmd=shift || 'list';
-    $cmd = parse_servicename($cmd);
+    $cmd = parse_servicename($cmd) || 'list' unless ($cmd =~ /(list)|(full)/);
     my @so=use_service('ServiceOverview')->hashrefs();
-    my $help="";
+    my $help=($cmd =~ /(list)|(full)/) ? "Available services:\n" : "";
     for my $so (@so) {
         my $sn=$so->{Name};
         if ($services{$sn} && (($sn =~ /^$cmd/) || ($cmd =~ /(list)|(full)/))) {
@@ -130,7 +107,7 @@ sub make_params {
 
 sub parse_servicename {
     my ($service)=grep(/^$_[0]/,keys %services);
-    return $service || $_[0];
+    return $service;
 }
 
 package Lingua::DE::Wortschatz::Result;
@@ -230,7 +207,7 @@ project.
 This module allows to perform automated queries with perl scripts.
 It can be used from the command line, too. There is no GUI.
 
-This program will run on Windows if perl is installed.
+This program will run on Windows if Perl is installed.
 
 =head1 FUNCTIONS
 
@@ -239,7 +216,7 @@ The following functions can be exported or used via the full name.
 =head2 use_service($name,@args)
 
 Uses the webservice named C<$name> with arguments C<@args>.
-Returns a result object that is described L<THE RESULT OBJECT|below>. Returns C<undef> if an insufficient number of arguments for the desired
+Returns a L<result object|THE RESULT OBJECT> that is described below. Returns C<undef> if an insufficient number of arguments for the desired
 service is supplied.
 
 All public services at L<http://wortschatz.uni-leipzig.de> are
@@ -269,15 +246,10 @@ can be obtained with the help function.
 
 For the Kreuzwortraetsel service, use % as a placeholder in parameter Wort.
 
-=head2 use_service_xml($name,@args)
-
-Does the same as C<use_service()> but returns the raw XML data that was
-sent by C<wortschatz.uni-leipzig.de>.
-
 =head2 help(?$service)
 
-Returns a string containing information about the service
-with name C<$service>. If no service name is given,
+Returns a string containing information about the service named C<$service>.
+If no service name is given,
 a short list of all available services is returned. If
 C<$service eq 'full'>, a more detailed list is created.
 
@@ -348,9 +320,9 @@ but it is short and it works. It's a hack.
 
 =head1 AUTHOR/COPYRIGHT
 
-This is C<$Id: Wortschatz.pm 1144 2008-10-04 20:52:59Z schroeer $>.
+This is C<$Id: Wortschatz.pm 1151 2008-10-05 20:57:26Z schroeer $>.
 
-Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>).
+Copyright 2005 - 2008 Daniel Schröer (L<schroeer@cpan.org>). Any feedback is appreciated.
 
 This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
